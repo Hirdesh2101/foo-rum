@@ -42,7 +42,7 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
 
                 <div className="flex items-start space-x-3 mb-4">
                     <Image
-                        src={post.author.avatar ?? ''}
+                        src={post.author.avatar ?? 'https://randomuser.me/api/portraits/men/79.jpg'}
                         alt={post.author.name}
                         className="w-10 h-10 rounded-full object-cover"
                         height={20}
@@ -62,9 +62,10 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
                         <span className="text-lg leading-none flex-shrink-0 mt-0.5">
                             {post.emoji}
                         </span>
-                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
-                            {post.content}
-                        </p>
+                        <div
+                            className="text-[var(--color-text-primary)] text-sm leading-relaxed prose prose-sm max-w-none"
+                            dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
                     </div>
                 </div>
                 <div className="flex items-center space-x-6 pt-2">

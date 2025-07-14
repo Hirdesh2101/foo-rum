@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Script from 'next/script';
 import { useAuth } from '../../../contexts/authContext';
 import {
     Send,
@@ -24,7 +23,17 @@ interface PostEditorProps {
     setSelectedEmoji: (emoji: string) => void;
 }
 
-// Quill types
+const emojis = [
+    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
+    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥸',
+    '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️',
+    '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡',
+    '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓',
+    '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄',
+    '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵',
+    '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠'
+];
 interface QuillFormat {
     [key: string]: boolean | string | number;
 }
@@ -39,11 +48,6 @@ interface QuillInstance {
     on(event: string, handler: () => void): void;
     off(event: string, handler: () => void): void;
 }
-
-interface QuillConstructor {
-    new(element: HTMLElement, options: QuillOptions): QuillInstance;
-}
-
 interface QuillOptions {
     modules: {
         toolbar: boolean | string | HTMLElement;
@@ -52,98 +56,74 @@ interface QuillOptions {
     placeholder: string;
 }
 
+interface QuillConstructor {
+    new(element: HTMLElement, options: QuillOptions): QuillInstance;
+}
+
 declare global {
     interface Window {
         Quill?: QuillConstructor;
     }
 }
 
-const emojis = [
-    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
-    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
-    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥸',
-    '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️',
-    '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡',
-    '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓',
-    '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄',
-    '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵',
-    '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠'
-] as const;
-
 export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, setSelectedEmoji }: PostEditorProps) {
     const [isPublishing, setIsPublishing] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [quillLoaded, setQuillLoaded] = useState(false);
     const [hasContent, setHasContent] = useState(false);
-    const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
-
     const editorRef = useRef<HTMLDivElement>(null);
-    const quillRef = useRef<QuillInstance | null>(null);
+    const quillRef = useRef<QuillInstance>(null);
     const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && !window.Quill) {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js';
+            script.onload = () => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css';
+                document.head.appendChild(link);
+                setQuillLoaded(true);
+            };
+            document.head.appendChild(script);
+        } else if (window.Quill) {
+            setQuillLoaded(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (quillLoaded && editorRef.current && !quillRef.current && window.Quill) {
+            quillRef.current = new window.Quill(editorRef.current, {
+                modules: {
+                    toolbar: false,
+                },
+                formats: ['bold', 'italic', 'underline', 'strike', 'header', 'list', 'link'],
+                placeholder: 'How are you feeling today?',
+            });
+
+            const quillInstance = quillRef.current;
+            if (quillInstance) {
+                quillInstance.on('text-change', () => {
+                    const text = quillInstance.getText().trim();
+                    setHasContent(text.length > 0);
+                });
+            }
+        }
+    }, [quillLoaded]);
 
     const formatButtons = [
         { icon: Bold, label: 'Bold', format: 'bold' },
         { icon: Italic, label: 'Italic', format: 'italic' },
         { icon: Underline, label: 'Underline', format: 'underline' },
         { icon: Strikethrough, label: 'Strikethrough', format: 'strike' },
-    ] as const;
+    ];
 
     const attachmentButtons = [
         { icon: Plus, label: 'Add attachment', action: handleUnimplementedClick },
         { icon: Mic, label: 'Voice message', action: handleUnimplementedClick },
         { icon: Camera, label: 'Add photo', action: handleUnimplementedClick },
-    ] as const;
-
-    const handleQuillLoad = () => {
-        setQuillLoaded(true);
-    };
-
-    const initializeQuill = () => {
-        if (!window.Quill || !editorRef.current || quillRef.current) return;
-
-        const quillInstance = new window.Quill(editorRef.current, {
-            modules: {
-                toolbar: false,
-            },
-            formats: ['bold', 'italic', 'underline', 'strike', 'header', 'list', 'link'],
-            placeholder: 'How are you feeling today?',
-        });
-
-        quillInstance.on('text-change', () => {
-            const text = quillInstance.getText().trim();
-            setHasContent(text.length > 0);
-        });
-
-        quillRef.current = quillInstance;
-    };
-
-    const getActiveFormats = (): Set<string> => {
-        if (!quillRef.current) return new Set<string>();
-        const formats = quillRef.current.getFormat();
-        return new Set<string>(Object.keys(formats).filter(key => formats[key]));
-    };
-
-    const updateFormats = () => {
-        setActiveFormats(getActiveFormats());
-    };
-
-    useEffect(() => {
-        if (quillLoaded) {
-            initializeQuill();
-        }
-    }, [quillLoaded]);
-
-    useEffect(() => {
-        if (!quillRef.current) return;
-
-        quillRef.current.on('selection-change', updateFormats);
-
-        return () => {
-            if (quillRef.current) {
-                quillRef.current.off('selection-change', updateFormats);
-            }
-        };
-    }, [quillLoaded]);
+    ];
 
     const handleFormat = (format: string) => {
         if (!quillRef.current) return;
@@ -199,24 +179,37 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
         setShowEmojiPicker(false);
     };
 
+    const getActiveFormats = (): Set<string> => {
+        if (!quillRef.current) return new Set<string>();
+        const formats = quillRef.current.getFormat();
+        return new Set<string>(Object.keys(formats).filter(key => formats[key]));
+    };
+
+    const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
+
+    useEffect(() => {
+        if (!quillRef.current) return;
+
+        const updateFormats = () => {
+            setActiveFormats(getActiveFormats());
+        };
+
+        quillRef.current.on('selection-change', updateFormats);
+
+        return () => {
+            if (quillRef.current) {
+                quillRef.current.off('selection-change', updateFormats);
+            }
+        };
+    }, [quillLoaded]);
+
     if (!quillLoaded) {
         return (
-            <>
-                <Script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"
-                    onLoad={handleQuillLoad}
-                    strategy="lazyOnload"
-                />
-                <link
-                    rel="stylesheet"
-                    href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css"
-                />
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mx-auto max-w-2xl">
-                    <div className="p-4 text-center text-gray-500">
-                        Loading editor...
-                    </div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mx-auto max-w-2xl">
+                <div className="p-4 text-center text-gray-500">
+                    Loading editor...
                 </div>
-            </>
+            </div>
         );
     }
 
