@@ -1,11 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { LogIn } from 'lucide-react';
-import { useAuth } from '../../../contexts/authContext';
-import { useForm } from 'react-hook-form';
-import { LoginData, SignUpData } from '../../../types/auth';
 import Modal from '../ui/Modal';
 import LoginForm from './loginForm';
 import SignUpForm from './signUpForm';
@@ -15,11 +10,6 @@ interface AuthModalProps {
     onClose: () => void;
     defaultMode?: 'login' | 'signup';
 }
-
-interface FormData extends SignUpData {
-    confirmPassword: string;
-}
-
 export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: AuthModalProps) {
     const [mode, setMode] = useState<'login' | 'signup'>(defaultMode);
     const handleSuccess = () => {

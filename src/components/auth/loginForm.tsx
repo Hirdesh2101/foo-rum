@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../contexts/authContext';
 import { LoginData } from '../../../types/auth';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
 import { LogIn } from 'lucide-react';
 
 interface LoginFormProps {
@@ -37,6 +35,7 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
             }
         } catch (err) {
             setError('An error occurred. Please try again.');
+            console.error(err);
         } finally {
             setIsLoading(false);
         }
@@ -44,7 +43,7 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
 
     return (
         <div className="bg-gray-100 flex items-center justify-center p-2">
-            <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
+            <div className="w-md bg-white rounded-xl shadow-lg p-6">
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                         <LogIn className="w-8 h-8 text-gray-700" />

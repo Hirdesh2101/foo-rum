@@ -1,0 +1,81 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { Heart, MessageCircle, Share } from 'lucide-react';
+import { Post } from '../../../types/post';
+import { useAuth } from '../../../contexts/authContext';
+
+interface PostCardProps {
+    post: Post;
+    onAuthRequired?: () => void;
+}
+
+export default function PostCard({ post, onAuthRequired }: PostCardProps) {
+    const { isAuthenticated } = useAuth();
+
+    const handleInteraction = () => {
+        if (!isAuthenticated) {
+            onAuthRequired?.();
+            return;
+        }
+        alert('Function not implemented');
+    };
+
+    const formatTimeAgo = (date: Date) => {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+        if (diffInSeconds < 60) return 'just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} mins ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+        return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 max-w-2xl mx-auto"
+        >
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 font-[var(--font-inter)]">
+
+                <div className="flex items-start space-x-3 mb-4">
+                    <img
+                        src={post.author.avatar}
+                        alt={post.author.name}
+                        className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                        <h3 className="font-medium text-[var(--color-text-primary)] text-sm">
+                            {post.author.name}
+                        </h3>
+                        <p className="text-[var(--color-text-secondary)] text-xs font-normal">
+                            {formatTimeAgo(post.timestamp)}
+                        </p>
+                    </div>
+                </div>
+                <div className="mb-4">
+                    <div className="flex items-start space-x-2">
+                        <span className="text-lg leading-none flex-shrink-0 mt-0.5">
+                            {post.emoji}
+                        </span>
+                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
+                            {post.content}
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center space-x-6 pt-2">
+                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                        <Heart size={18} className="stroke-current" />
+                    </button>
+                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                        <MessageCircle size={18} className="stroke-current" />
+                    </button>
+                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                        <Share size={18} className="stroke-current" />
+                    </button>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
