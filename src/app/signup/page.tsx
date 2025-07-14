@@ -1,27 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/authContext';
-import { useForm } from 'react-hook-form';
-import { SignUpData } from '../../../types/auth';
 import Link from 'next/link';
 import SignUpForm from '@/components/auth/signUpForm';
 
-interface SignUpFormData extends SignUpData {
-    confirmPassword: string;
-}
 
 export default function SignUpPage() {
     const router = useRouter();
-    const { isAuthenticated, signup } = useAuth();
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch
-    } = useForm<SignUpFormData>();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         if (isAuthenticated) {

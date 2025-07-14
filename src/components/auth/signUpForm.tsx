@@ -35,6 +35,7 @@ export default function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormPro
             }
         } catch (err) {
             setError('An error occurred. Please try again.');
+            console.error(err);
         } finally {
             setIsLoading(false);
         }

@@ -1,21 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/authContext';
-import { useForm } from 'react-hook-form';
-import { LoginData } from '../../../types/auth';
 import Link from 'next/link';
 import LoginForm from '@/components/auth/loginForm';
 
 export default function SignInPage() {
     const router = useRouter();
-    const { isAuthenticated, login } = useAuth();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginData>();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         if (isAuthenticated) {

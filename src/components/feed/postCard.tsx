@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share } from 'lucide-react';
 import { Post } from '../../../types/post';
 import { useAuth } from '../../../contexts/authContext';
+import Image from 'next/image';
 
 interface PostCardProps {
     post: Post;
@@ -40,10 +41,12 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 font-[var(--font-inter)]">
 
                 <div className="flex items-start space-x-3 mb-4">
-                    <img
-                        src={post.author.avatar}
+                    <Image
+                        src={post.author.avatar ?? ''}
                         alt={post.author.name}
                         className="w-10 h-10 rounded-full object-cover"
+                        height={20}
+                        width={20}
                     />
                     <div>
                         <h3 className="font-medium text-[var(--color-text-primary)] text-sm">
