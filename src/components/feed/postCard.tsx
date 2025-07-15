@@ -41,7 +41,7 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
             <div className="p-4 rounded-2xl z-10 shadow-xl">
                 <div className="flex items-start space-x-3 mb-4">
                     <Image
-                        src={post.author.avatar ?? 'https://randomuser.me/api/portraits/men/79.jpg'}
+                        src={post.author.avatar ?? 'https://d140p29c73x6ns.cloudfront.net/temp/rajeshkumar.jpg'}
                         alt={post.author.name}
                         className="w-10 h-10 rounded-full object-cover"
                         height={20}

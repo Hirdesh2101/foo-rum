@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 id: Math.random().toString(36).substr(2, 9),
                 email: account.email,
                 name: account.name,
-                avatar: 'https://randomuser.me/api/portraits/men/79.jpg',
+                avatar: 'https://d140p29c73x6ns.cloudfront.net/temp/rajeshkumar.jpg',
             };
 
             const newState = { user, isAuthenticated: true };
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: Math.random().toString(36).substr(2, 9),
             email: data.email,
             name: data.name,
-            avatar: 'https://randomuser.me/api/portraits/men/79.jpg',
+            avatar: 'https://d140p29c73x6ns.cloudfront.net/temp/rajeshkumar.jpg',
         };
 
         const newState = { user, isAuthenticated: true };

@@ -12,7 +12,7 @@ const INITIAL_POSTS: Post[] = [
     {
         id: '1',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        author: { name: 'Theresa Webb', avatar: 'https://randomuser.me/api/portraits/men/79.jpg' },
+        author: { name: 'Theresa Webb', avatar: 'https://d140p29c73x6ns.cloudfront.net/temp/amitsharma.jpg' },
         timestamp: new Date(Date.now() - 5 * 60 * 1000),
         likes: 24,
         comments: 5,
@@ -22,7 +22,7 @@ const INITIAL_POSTS: Post[] = [
     {
         id: '2',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        author: { name: 'John Doe', avatar: 'https://randomuser.me/api/portraits/men/72.jpg' },
+        author: { name: 'John Doe', avatar: 'https://d140p29c73x6ns.cloudfront.net/temp/nehagupta.jpg' },
         timestamp: new Date(Date.now() - 5 * 60 * 1000),
         likes: 18,
         comments: 8,
@@ -32,7 +32,7 @@ const INITIAL_POSTS: Post[] = [
     {
         id: '3',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        author: { name: 'Jane Doe', avatar: 'https://randomuser.me/api/portraits/men/74.jpg' },
+        author: { name: 'Jane Doe', avatar: 'https://d140p29c73x6ns.cloudfront.net/temp/priyapatel.jpg' },
         timestamp: new Date(Date.now() - 5 * 60 * 1000),
         likes: 42,
         comments: 12,
