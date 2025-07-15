@@ -127,13 +127,21 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
 
     const handleFormat = (format: string) => {
         if (!quillRef.current) return;
-
         const currentFormat = quillRef.current.getFormat();
         const isActive = currentFormat[format];
-
         quillRef.current.format(format, !isActive);
         quillRef.current.focus();
+        setActiveFormats(prevFormats => {
+            const newFormats = new Set(prevFormats);
+            if (isActive) {
+                newFormats.delete(format);
+            } else {
+                newFormats.add(format);
+            }
+            return newFormats;
+        });
     };
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -205,7 +213,7 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
 
     if (!quillLoaded) {
         return (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mx-auto max-w-2xl">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 mx-auto max-w-2xl">
                 <div className="p-4 text-center text-gray-500">
                     Loading editor...
                 </div>
@@ -217,13 +225,13 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mx-auto max-w-2xl"
+            className="bg-white rounded-2xl shadow-sm border-6 border-gray-100 mb-6 mx-auto max-w-2xl"
         >
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 rounded-t-lg">
+            <div className="px-4 py-2 rounded-t-lg overflow-hidden z-10">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 rounded-md bg-gray-100 py-2 px-4">
                         <div className="flex items-center gap-2">
-                            <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                            <button className="flex items-center gap-2 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
                                 <span>Paragraph</span>
                                 <ChevronDown className="w-4 h-4" />
                             </button>
@@ -247,14 +255,14 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
                     </div>
                     <button
                         onClick={handleDiscard}
-                        className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-md transition-colors"
+                        className="p-4 bg-red-50 text-red-500 hover:bg-red-100 rounded-md transition-colors"
                         title="Discard"
                     >
                         <Trash2 className="w-4 h-4" />
                     </button>
                 </div>
             </div>
-            <div className="p-4">
+            <div className="px-4 pt-2 z-10">
                 <div className="flex items-start gap-3">
                     <div className="relative">
                         <button
@@ -266,7 +274,7 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
                         </button>
 
                         {showEmojiPicker && (
-                            <div className="absolute top-10 left-0 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-10 w-64">
+                            <div className="absolute top-10 left-0 bg-white rounded-2xl shadow-lg p-3 z-10 w-64">
                                 <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto">
                                     {emojis.map((emoji, index) => (
                                         <button
@@ -282,7 +290,7 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
                             </div>
                         )}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 h-20">
                         <div
                             ref={editorRef}
                             className="text-gray-700 text-sm leading-relaxed font-normal"
@@ -291,7 +299,7 @@ export default function PostEditor({ onPublish, onAuthRequired, selectedEmoji, s
                     </div>
                 </div>
             </div>
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 rounded-b-lg z-10 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-2">
                     {attachmentButtons.map(({ icon: Icon, label, action }) => (
                         <button

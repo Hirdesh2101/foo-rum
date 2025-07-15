@@ -42,7 +42,7 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
     };
 
     return (
-        <div className="bg-gray-100 flex items-center justify-center p-2">
+        <div className="bg-gray-100 flex flex-col items-center justify-center p-2 rounded-xl">
             <div className="w-md bg-white rounded-xl shadow-lg p-6">
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -54,7 +54,7 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
                             Email or username
                         </label>
                         <input
@@ -71,7 +71,7 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
                             Password
                         </label>
                         <input
@@ -104,20 +104,21 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
                     </button>
                 </div>
 
-                {onSwitchToSignup && (
-                    <div className="text-center mt-8">
-                        <p className="text-gray-500">
-                            Do not have and account?{' '}
-                            <button
-                                onClick={onSwitchToSignup}
-                                className="text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                                Sign Up
-                            </button>
-                        </p>
-                    </div>
-                )}
+
             </div>
+            {onSwitchToSignup && (
+                <div className="text-center mt-4">
+                    <p className="text-gray-500">
+                        Do not have and account?{' '}
+                        <button
+                            onClick={onSwitchToSignup}
+                            className="text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                            Sign Up
+                        </button>
+                    </p>
+                </div>
+            )}
         </div>
     );
 }

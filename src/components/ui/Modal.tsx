@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
 
@@ -11,17 +11,7 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -29,13 +19,20 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
                 onClose();
             }
         };
+        const handleClickOutside = (e: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+                onClose();
+            }
+        };
 
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
+            document.addEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
             document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isOpen, onClose]);
 
@@ -47,21 +44,20 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-gray-100/45 backdrop-blur-sm"
+                        className="fixed inset-0 bg-gray-100/45 backdrop-blur-xs"
                     />
                     <FocusTrap
                         active={isOpen}
                         focusTrapOptions={{
-                            initialFocus: '#modal-container',
                             clickOutsideDeactivates: true,
                         }}
                     >
                         <motion.div
-                            id="modal-container"
+                            ref={modalRef}
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto z-10"
+                            className="relative rounded-xl mx-4 max-h-[90vh] overflow-y-auto z-10"
                         >
                             {children}
                         </motion.div>

@@ -36,10 +36,9 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 max-w-2xl mx-auto"
+            className="bg-white rounded-2xl shadow-sm border-6 border-gray-100 mb-6 mx-auto max-w-2xl overflow-hidden"
         >
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 font-[var(--font-inter)]">
-
+            <div className="p-4 rounded-2xl z-10 shadow-xl">
                 <div className="flex items-start space-x-3 mb-4">
                     <Image
                         src={post.author.avatar ?? 'https://randomuser.me/api/portraits/men/79.jpg'}
@@ -57,28 +56,27 @@ export default function PostCard({ post, onAuthRequired }: PostCardProps) {
                         </p>
                     </div>
                 </div>
-                <div className="mb-4">
-                    <div className="flex items-start space-x-2">
-                        <span className="text-lg leading-none flex-shrink-0 mt-0.5">
-                            {post.emoji}
-                        </span>
-                        <div
-                            className="text-[var(--color-text-primary)] text-sm leading-relaxed prose prose-sm max-w-none"
-                            dangerouslySetInnerHTML={{ __html: post.content }}
-                        />
-                    </div>
+                <div className="flex items-start space-x-2">
+                    <span className="text-lg leading-none flex-shrink-0 mt-0.5 bg-gray-100 rounded-full p-1.5">
+                        {post.emoji}
+                    </span>
+                    <div
+                        className="text-[var(--color-text-primary)] text-sm leading-relaxed prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                    />
                 </div>
-                <div className="flex items-center space-x-6 pt-2">
-                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
-                        <Heart size={18} className="stroke-current" />
-                    </button>
-                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
-                        <MessageCircle size={18} className="stroke-current" />
-                    </button>
-                    <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
-                        <Share size={18} className="stroke-current" />
-                    </button>
-                </div>
+
+            </div>
+            <div className="flex bg-gray-100 items-center space-x-3 px-2 pt-2">
+                <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                    <Heart size={18} className="stroke-current" />
+                </button>
+                <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                    <MessageCircle size={18} className="stroke-current" />
+                </button>
+                <button onClick={handleInteraction} className="flex items-center justify-center w-8 h-8 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-gray-50 rounded-full transition-colors duration-200">
+                    <Share size={18} className="stroke-current" />
+                </button>
             </div>
         </motion.div>
     );
